@@ -1,0 +1,7 @@
+[
+    {
+        "name": "ping",
+        "description": "Get the bot's ping",
+        "path": "commands/ping.js"
+    }
+]
