@@ -40,7 +40,7 @@
    In the root directory, create a `.env` file and add your Discord bot token:
 
    ```env
-   TOKEN=your-discord-bot-token
+   TOKEN=your_token_here
    ```
 
 4. **Configure Settings**
