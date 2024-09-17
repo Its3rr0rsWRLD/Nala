@@ -1,6 +1,6 @@
 <p align="center">
     <div align="center">
-        <img src="images/nala.gif" alt="Nala">
+        <img src="images/nala.gif" alt="Nala" href="https://discord.com/oauth2/authorize?client_id=1223073528954490940&scope=bot">
     </div>
 
 # Nala
@@ -8,7 +8,7 @@
 
 **[Join the Discord!](https://dsc.gg/3rr0r)**
 
-**[Invite Nala to your server!](https://discord.com/oauth2/authorize?client_id=1223073528954490940&permissions=8&scope=bot%20applications.commands)**
+**[Invite Nala to your server!](https://discord.com/oauth2/authorize?client_id=1223073528954490940&scope=bot)**
 
 ## Features
 
