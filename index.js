@@ -1,54 +1,65 @@
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages], partials: [Partials.USER, Partials.CHANNEL, Partials.GUILD_MEMBER] });
-
-const hardCommands = [
-    {
-        handler: require('./commands/handler.js'),
-        chatbot: require('./commands/chatbot.js'),
-    }
-];
-
+/* Initialization */
+require('dotenv').config();
 const fs = require('fs');
+const path = require('path');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const Utils = require('./utils');
 
-const commands = JSON.parse(fs.readFileSync('commands.json', 'utf8'));
+const settings = JSON.parse(fs.readFileSync(path.join(__dirname, 'settings.json'), 'utf8'));
 
-client.on('ready', async () => {
-    for (const command of commands) {
-        console.log(`Registering command ${command.name}...`);
-        await client.application.commands.create(command);
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+client.commands = new Collection();
+
+const utils = new Utils();
+
+/* Command Handler */
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    const commandName = command.name || file.split('.')[0];
+    client.commands.set(commandName, command);
+    
+    if (settings.logCommandsInit) {
+        utils.log(`Loaded command: ${commandName}`, 'info');
     }
+}
 
-    console.log('Global slash commands registered!');
-});
 
+/* Event Listener */
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
-    const { commandName } = interaction;
-
-    /* run the file in the json under 'path' */
-    const command = require(`${commands.find(cmd => cmd.name === commandName).path}`);
+    const command = client.commands.get(interaction.commandName);
+    if (!command) {
+        await utils.tempReply(interaction, { 
+            content: '## Woops! How did this happen?\nThere must have been an issue! This command does not exist! 😅', 
+            ephemeral: false, 
+            time: settings.defaultTempReply,
+            showTime: true
+        });
+        return;
+    }
 
     try {
-        await command(interaction, client);
+        await command.execute(interaction);
     } catch (error) {
-        // hardCommands[0].handler.execute(interaction, error);
-        console.error(error);
+        utils.error(error);
+        await interaction.reply({ content: 'There was an error executing this command!', ephemeral: true });
     }
 });
 
-client.on('messageCreate', async message => {
-    if (message.content.startsWith(`<@${client.user.id}>`)) {
-        let msg = message.content.split('<@')[1].split('>')[1]
-        console.log(msg);
-        if (!msg) return message.channel.send('Yes?');
+/* Bot Initialization Message */
+if (settings.initMessage.enabled) {
+    client.once('ready', () => {
+        utils.log(settings.initMessage.message, 'info');
+    });
+}
 
-        return hardCommands[0].chatbot(message, client, msg);
-    }
-});
+/* Log Command Initialization */
+if (settings.logCommandsInit) {
+    utils.log('Commands have been initialized.', 'info');
+}
 
+/* Bot Login */
 client.login(process.env.TOKEN);

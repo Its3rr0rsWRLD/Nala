@@ -1,0 +1,8 @@
+{
+    "defaultTempReply": 5000,
+    "initMessage": {
+        "enabled": true,
+        "message": "Nala is ready for liftoff! 🚀"
+    },
+    "logCommandsInit": true
+}
