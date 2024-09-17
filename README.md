@@ -68,16 +68,17 @@
 
    ```javascript
    const { SlashCommandBuilder } = require('discord.js');
+   const settings = require('../settings.json');
 
    module.exports = {
-       data: new SlashCommandBuilder()
-           .setName('ping')
-           .setDescription('Replies with Pong and latency information'),
+      data: new SlashCommandBuilder()
+         .setName('ping')
+         .setDescription('Replies with Pong and latency information'),
 
-       execute: async (interaction) => {
-           const latency = Date.now() - interaction.createdTimestamp;
-           await interaction.reply({ content: `Pong! Latency: ${latency}ms`, ephemeral: true });
-       }
+      execute: async (interaction, utils) => {
+         const latency = Date.now() - interaction.createdTimestamp;
+         await utils.tempReply(interaction, { content: `Pong! Latency: ${latency}ms`, time: settings.defaultTempReply, showTime: true });
+      }
    };
    ```
 

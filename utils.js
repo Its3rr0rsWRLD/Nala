@@ -3,6 +3,7 @@ class Utils {
 
     async tempReply(interaction, options) {
         const content = options.content;
+        const embeds = options.embeds || [];
         const ephemeral = options.ephemeral || false;
         const time = options.time || 5000;
         const showTime = options.showTime || false;
@@ -10,13 +11,23 @@ class Utils {
         try {
             const deleteAt = Math.floor((Date.now() + time) / 1000);
 
-            let replyContent = content;
-
-            if (showTime) {
-                replyContent += `\n-# Deleting message <t:${deleteAt}:R>`;
+            if (showTime && embeds.length > 0) {
+                const embed = embeds[0];
+                const currentDescription = embed.data.description || '';
+                const updatedDescription = `${currentDescription}\n-# Deleting message <t:${deleteAt}:R>`;
+                embed.setDescription(updatedDescription);
+            } else if (showTime) {
+                content += `\n-# Deleting message <t:${deleteAt}:R>`;
             }
 
-            const reply = await interaction.reply({ content: replyContent, ephemeral: ephemeral, fetchReply: true });
+            const replyOptions = {
+                content: content,
+                embeds: embeds,
+                ephemeral: ephemeral,
+                fetchReply: true
+            };
+
+            const reply = await interaction.reply(replyOptions);
 
             setTimeout(() => {
                 reply.delete().catch(console.error);

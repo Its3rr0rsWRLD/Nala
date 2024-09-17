@@ -1,12 +1,20 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const settings = require('../settings.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('Replies with Pong and latency information'),
 
-    execute: async (interaction) => {
+    execute: async (interaction, utils) => {
         const latency = Date.now() - interaction.createdTimestamp;
-        await interaction.reply({ content: `Pong! Latency: ${latency}ms`, ephemeral: true });
+
+        const pingEmbed = new EmbedBuilder()
+            .setColor(0x00FF00)
+            .setTitle('Pong!')
+            .setDescription(`Latency: ${latency}ms`)
+            .setTimestamp();
+
+        await utils.tempReply(interaction, { embeds: [pingEmbed], time: settings.defaultTempReply, showTime: true });
     }
 };
