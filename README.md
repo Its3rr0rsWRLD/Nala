@@ -8,7 +8,7 @@
 
 -# [Join the Discord!](https://dsc.gg/3rr0r)
 
--# [Invite Nala to your server!](https://discord.com/oauth2/authorize?client_id=891000000000000000&permissions=8&scope=bot%20applications.commands)
+-# [Invite Nala to your server!](https://discord.com/oauth2/authorize?client_id=1223073528954490940&permissions=8&scope=bot%20applications.commands)
 
 ## Features
 
