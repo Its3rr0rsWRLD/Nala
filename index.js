@@ -59,5 +59,12 @@ if (settings.logCommandsInit) {
     utils.log('Commands have been initialized.', 'info');
 }
 
-/* Bot Login */
-client.login(process.env.TOKEN);
+/* noToken */
+if (process.argv.includes('noToken')) {
+    utils.log('noToken flag detected. Exiting...', 'info');
+    setTimeout(() => {
+        process.exit(0);
+    }, 1000);
+} else {
+    client.login(process.env.TOKEN);
+}
