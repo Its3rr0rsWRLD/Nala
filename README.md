@@ -2,6 +2,7 @@
     <div align="center">
         <img src="images/nala.gif" alt="Nala" href="https://discord.com/oauth2/authorize?client_id=1223073528954490940&scope=bot">
     </div>
+</p>
 
 # Nala
 **Nala** is an open-source Discord bot designed for various random needs. It offers a flexible command structure and integrates seamlessly with Discord's API. This README will guide you through setting up, configuring, and contributing to Nala.
@@ -22,7 +23,7 @@
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/nala.git
+   git clone https://github.com/Its3rr0rsWRLD/nala.git
    cd nala
    ```
 
