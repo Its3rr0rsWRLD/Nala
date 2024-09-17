@@ -6,9 +6,9 @@
 # Nala
 **Nala** is an open-source Discord bot designed for various random needs. It offers a flexible command structure and integrates seamlessly with Discord's API. This README will guide you through setting up, configuring, and contributing to Nala.
 
--# [Join the Discord!](https://dsc.gg/3rr0r)
+**[Join the Discord!](https://dsc.gg/3rr0r)**
 
--# [Invite Nala to your server!](https://discord.com/oauth2/authorize?client_id=1223073528954490940&permissions=8&scope=bot%20applications.commands)
+**[Invite Nala to your server!](https://discord.com/oauth2/authorize?client_id=1223073528954490940&permissions=8&scope=bot%20applications.commands)**
 
 ## Features
 
