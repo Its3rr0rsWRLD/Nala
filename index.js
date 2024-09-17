@@ -7,7 +7,7 @@ const Utils = require('./utils');
 
 const settings = JSON.parse(fs.readFileSync(path.join(__dirname, 'settings.json'), 'utf8'));
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
 client.commands = new Collection();
 
@@ -17,14 +17,12 @@ const utils = new Utils();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    const commandName = command.name || file.split('.')[0];
-    client.commands.set(commandName, command);
-    
+    client.commands.set(command.data.name, command);
+
     if (settings.logCommandsInit) {
-        utils.log(`Loaded command: ${commandName}`, 'info');
+        utils.log(`Loaded command: ${command.data.name}`, 'info');
     }
 }
-
 
 /* Event Listener */
 client.on('interactionCreate', async interaction => {
@@ -42,7 +40,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     try {
-        await command.execute(interaction);
+        await command.execute(interaction, client);
     } catch (error) {
         utils.error(error);
         await interaction.reply({ content: 'There was an error executing this command!', ephemeral: true });
