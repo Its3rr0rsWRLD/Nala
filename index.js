@@ -4,11 +4,12 @@ const fs = require('fs');
 const path = require('path');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const Utils = require('./utils');
+const chatbot = require('./chatbot');
 
 const settings = JSON.parse(fs.readFileSync(path.join(__dirname, 'settings.json'), 'utf8'));
 const dbPath = path.join(__dirname, 'db.json');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent] });
 
 client.commands = new Collection();
 const utils = new Utils();
@@ -76,8 +77,8 @@ client.once('ready', async () => {
                         try {
                             await guild.members.unban(userId);
                             utils.log(`Unbanned user ${userId} from guild ${guildId}`, 'success');
-                            delete db[guildId][userId]; // Remove from database
-                            fs.writeFileSync(dbPath, JSON.stringify(db, null, 2)); // Save changes
+                            delete db[guildId][userId];
+                            fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
                         } catch (error) {
                             utils.error(`Failed to unban user ${userId} from guild ${guildId}: ${error.message}`);
                         }
@@ -85,7 +86,28 @@ client.once('ready', async () => {
                 }
             }
         }
-    }, settings.banCheckTime * 1000); // Convert seconds to milliseconds
+    }, settings.banCheckTime * 1000);
+});
+
+/* Chatbot Listener */
+client.on('messageCreate', async message => {
+    if (!settings.chatbot.enabled || message.author.bot) return;
+    if (settings.chatbot.triggers.some(trigger => {
+        const loweredMessage = message.content.toLowerCase();
+        const loweredTrigger = trigger.toLowerCase();
+        const triggerIndex = loweredMessage.indexOf(loweredTrigger);
+
+        return (
+            triggerIndex !== -1 && 
+            triggerIndex <= settings.chatbot.offset
+        );
+    })) {
+        try {
+            await chatbot(message, utils);
+        } catch (error) {
+            utils.error(error);
+        }
+    }
 });
 
 /* Event Listener */
@@ -103,14 +125,38 @@ client.on('interactionCreate', async interaction => {
         return;
     }
 
-    try {
-        await command.execute(interaction, utils, client);
-    } catch (error) {
-        utils.error(error);
+    if (interaction.options.getSubcommand(false)) {
+        const subcommand = command.subcommands.get(interaction.options.getSubcommand());
+        if (!subcommand) {
+            await utils.tempReply(interaction, { 
+                content: '## Woops! How did this happen?\nThere must have been an issue! This subcommand does not exist! 😅', 
+                ephemeral: false, 
+                time: settings.defaultTempReply,
+                showTime: true
+            });
+            return;
+        }
+
         try {
-            await interaction.reply({ content: 'There was an error executing this command!', ephemeral: true });
+            await subcommand.execute(interaction, utils, client);
         } catch (error) {
             utils.error(error);
+            try {
+                await interaction.reply({ content: 'There was an error executing this subcommand!', ephemeral: true });
+            } catch (error) {
+                utils.error(error);
+            }
+        }
+    } else {
+        try {
+            await command.execute(interaction, utils, client);
+        } catch (error) {
+            utils.error(error);
+            try {
+                await interaction.reply({ content: 'There was an error executing this command!', ephemeral: true });
+            } catch (error) {
+                utils.error(error);
+            }
         }
     }
 });

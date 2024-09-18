@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+const settings = JSON.parse(fs.readFileSync(path.join(__dirname, 'settings.json'), 'utf8'));
+
 class Utils {
     constructor() {}
 
@@ -89,7 +93,11 @@ class Utils {
 
     async error(error) {
         const firstLine = error.toString().split('\n')[0];
-        this.log(firstLine, 'error');
+        if (settings.fullErrorLog) {
+            this.log(error, 'error');
+        } else {
+            this.log(firstLine, 'error');
+        }
     }
 }
 
