@@ -30,7 +30,7 @@ class Utils {
             const reply = await interaction.reply(replyOptions);
 
             setTimeout(() => {
-                reply.delete().catch(console.error);
+                reply.delete().catch();
             }, time);
         } catch (error) {
             console.error(error);
