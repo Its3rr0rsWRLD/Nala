@@ -2,7 +2,7 @@ class Utils {
     constructor() {}
 
     async tempReply(interaction, options) {
-        const content = options.content;
+        let content = options.content;
         const embeds = options.embeds || [];
         const ephemeral = options.ephemeral || false;
         const time = options.time || 5000;
@@ -30,10 +30,12 @@ class Utils {
             const reply = await interaction.reply(replyOptions);
 
             setTimeout(() => {
-                reply.delete().catch();
+                reply.delete().catch((error) => {
+                    this.error(`Failed to delete message (ID: ${reply.id})`);
+                });
             }, time);
         } catch (error) {
-            console.error(error);
+            this.error(error);
         }
     }
 
@@ -86,7 +88,7 @@ class Utils {
     }
 
     async error(error) {
-        console.error(error);
+        this.log(error, 'error');
     }
 }
 
