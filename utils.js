@@ -81,14 +81,15 @@ class Utils {
                 console.log(chalk.hex('#9B59B6')(emoji + '  ' + message)); // Purple
                 break;
             default:
-                emoji = 'ℹ️';
+                emoji = 'ⓘ';
                 console.log(chalk.hex('#FFFFFF')(emoji + '  ' + message)); // Default to white
                 break;
         }
     }
 
     async error(error) {
-        this.log(error, 'error');
+        const firstLine = error.toString().split('\n')[0];
+        this.log(firstLine, 'error');
     }
 }
 
