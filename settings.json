@@ -1,5 +1,10 @@
 {
     "defaultTempReply": 5000,
+    "invalidCommand": {
+        "enabled": true,
+        "timeout": 1,
+        "message": "## Woops! How did this happen?\nThere must have been an issue! This command does not exist! 😅"
+    },
     "initMessage": {
         "enabled": true,
         "message": "Nala is ready for liftoff! 🚀"

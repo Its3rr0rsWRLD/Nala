@@ -5,35 +5,50 @@ class Utils {
         let content = options.content;
         const embeds = options.embeds || [];
         const ephemeral = options.ephemeral || false;
-        const time = options.time || 5000;
+        let time = options.time || 5000;
         const showTime = options.showTime || false;
 
+        if (time === 1) {
+            const settings = await import('./settings.json', { assert: { type: 'json' } });
+            time = settings.defaultTempReply || 5000;
+        }
+
         try {
-            const deleteAt = Math.floor((Date.now() + time) / 1000);
+            if (time > 0) {
+                const deleteAt = Math.floor((Date.now() + time) / 1000);
 
-            if (showTime && embeds.length > 0) {
-                const embed = embeds[0];
-                const currentDescription = embed.data.description || '';
-                const updatedDescription = `${currentDescription}\n-# Deleting message <t:${deleteAt}:R>`;
-                embed.setDescription(updatedDescription);
-            } else if (showTime) {
-                content += `\n-# Deleting message <t:${deleteAt}:R>`;
+                if (showTime && embeds.length > 0) {
+                    const embed = embeds[0];
+                    const currentDescription = embed.data.description || '';
+                    const updatedDescription = `${currentDescription}\n-# Deleting message <t:${deleteAt}:R>`;
+                    embed.setDescription(updatedDescription);
+                } else if (showTime) {
+                    content += `\n-# Deleting message <t:${deleteAt}:R>`;
+                }
+
+                const replyOptions = {
+                    content: content,
+                    embeds: embeds,
+                    ephemeral: ephemeral,
+                    fetchReply: true
+                };
+
+                const reply = await interaction.reply(replyOptions);
+
+                setTimeout(() => {
+                    reply.delete().catch((error) => {
+                        this.error(`Failed to delete message (ID: ${reply.id})`);
+                    });
+                }, time);
+            } else {
+                const replyOptions = {
+                    content: content,
+                    embeds: embeds,
+                    ephemeral: ephemeral
+                };
+
+                await interaction.reply(replyOptions);
             }
-
-            const replyOptions = {
-                content: content,
-                embeds: embeds,
-                ephemeral: ephemeral,
-                fetchReply: true
-            };
-
-            const reply = await interaction.reply(replyOptions);
-
-            setTimeout(() => {
-                reply.delete().catch((error) => {
-                    this.error(`Failed to delete message (ID: ${reply.id})`);
-                });
-            }, time);
         } catch (error) {
             this.error(error);
         }

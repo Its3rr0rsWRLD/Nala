@@ -95,9 +95,9 @@ client.on('interactionCreate', async interaction => {
     const command = client.commands.get(interaction.commandName);
     if (!command) {
         await utils.tempReply(interaction, { 
-            content: '## Woops! How did this happen?\nThere must have been an issue! This command does not exist! 😅', 
+            content: settings.invalidCommand.message,
             ephemeral: false, 
-            time: settings.defaultTempReply,
+            time: settings.invalidCommand.timeout,
             showTime: true
         });
         return;
