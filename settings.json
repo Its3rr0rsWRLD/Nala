@@ -16,5 +16,6 @@
     "bugreport": {
         "enabled": true,
         "webhook": ""
-    }
+    },
+    "transcribeHost": "http://localhost:5000/transcribe"
 }
