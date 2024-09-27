@@ -11,5 +11,6 @@
     },
     "logCommandsInit": true,
     "banCheckTime": 60,
-    "alertBanToUser": true
+    "alertBanToUser": true,
+    "useOpenAIWhisperAPI": false
 }
