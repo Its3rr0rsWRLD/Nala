@@ -63,21 +63,26 @@
    Edit `settings.json` to customize the bot's settings:
 
    ```json
-   {
-     "defaultTempReply": 5000,
-     "initMessage": {
-       "enabled": true,
-       "message": "Nala is ready for liftoff! 🚀"
-     },
-     "logCommandsInit": true,
-     "alertBanToUser": true,
-     "alertKickToUser": true,
-     "banCheckTime": 60,
-     "invalidCommand": {
-       "message": "Invalid command.",
-       "timeout": 5000
-     }
-   }
+  {
+      "defaultTempReply": 5000,
+      "invalidCommand": {
+          "enabled": true,
+          "timeout": 1,
+          "message": "## Woops! How did this happen?\nThere must have been an issue! This command does not exist! 😅"
+      },
+      "initMessage": {
+          "enabled": true,
+          "message": "Nala is ready for liftoff! 🚀"
+      },
+      "logCommandsInit": true,
+      "banCheckTime": 60,
+      "alertBanToUser": true,
+      "useOpenAIWhisperAPI": false,
+      "bugreport": {
+          "enabled": true,
+          "webhook": ""
+      }
+  }
    ```
 
 ## Usage
