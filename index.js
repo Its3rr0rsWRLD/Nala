@@ -25,11 +25,15 @@ function loadCommands() {
 
   for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    commands.push(command.data.toJSON());
-    client.commands.set(command.data.name, command);
+    if (command.data && typeof command.data.toJSON === 'function') {
+        commands.push(command.data.toJSON());
+        client.commands.set(command.data.name, command);
 
-    if (settings.logCommandsInit) {
-      utils.log(`Loaded command: ${command.data.name}`, 'info');
+        if (settings.logCommandsInit) {
+          utils.log(`Loaded command: ${command.data.name}`, 'info');
+        }
+    } else {
+        utils.error(`Command ${file} is missing 'data' property or 'toJSON' method.`);
     }
   }
 
@@ -103,20 +107,6 @@ async function checkBans() {
     utils.error(`Error writing to db file: ${error}`);
   }
 }
-
-/* AFK System */
-client.on('messageCreate', async (message) => {
-  if (afkUsers.has(message.author.id)) {
-    afkUsers.delete(message.author.id);
-    message.reply('Welcome back! Your AFK status has been removed.');
-  }
-
-  message.mentions.users.forEach((user) => {
-    if (afkUsers.has(user.id)) {
-      message.reply(`${user.tag} is currently AFK: ${afkUsers.get(user.id)}`);
-    }
-  });
-});
 
 /* Event Listener */
 client.on('interactionCreate', async interaction => {

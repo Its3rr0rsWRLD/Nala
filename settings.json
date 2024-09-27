@@ -12,5 +12,9 @@
     "logCommandsInit": true,
     "banCheckTime": 60,
     "alertBanToUser": true,
-    "useOpenAIWhisperAPI": false
+    "useOpenAIWhisperAPI": false,
+    "bugreport": {
+        "enabled": true,
+        "webhook": ""
+    }
 }
