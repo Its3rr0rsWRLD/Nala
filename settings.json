@@ -17,5 +17,5 @@
         "enabled": true,
         "webhook": ""
     },
-    "transcribeHost": "http://localhost:5000/transcribe"
+    "transcribeHost": "http://nalaai.railway.internal:5000/transcribe"
 }
