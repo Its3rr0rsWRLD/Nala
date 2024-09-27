@@ -104,6 +104,20 @@ async function checkBans() {
   }
 }
 
+/* AFK System */
+client.on('messageCreate', async (message) => {
+  if (afkUsers.has(message.author.id)) {
+    afkUsers.delete(message.author.id);
+    message.reply('Welcome back! Your AFK status has been removed.');
+  }
+
+  message.mentions.users.forEach((user) => {
+    if (afkUsers.has(user.id)) {
+      message.reply(`${user.tag} is currently AFK: ${afkUsers.get(user.id)}`);
+    }
+  });
+});
+
 /* Event Listener */
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
