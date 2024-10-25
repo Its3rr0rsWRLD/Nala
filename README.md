@@ -6,9 +6,10 @@
 
 # Nala
 
-**Nala** is an open-source Discord bot designed to meet various needs with a flexible command structure and seamless integration with Discord's API.
+**Nala** is an open-source Discord bot designed to meet various needs with a
+flexible command structure and seamless integration with Discord's API.
 
-[![Join Our Discord](https://img.shields.io/badge/Discord-Join%20Us-7289DA?logo=discord&logoColor=white)](https://dsc.gg/3rr0r)
+[![Join Our Discord](https://img.shields.io/badge/Discord-Join%20Us-7289DA?logo=discord&logoColor=white)](https://dsc.gg/3rr0r)  
 [![Invite Nala](https://img.shields.io/badge/Invite%20Nala-Click%20Here-blue?logo=discord&logoColor=white)](https://discord.com/oauth2/authorize?client_id=1223073528954490940&scope=bot)
 
 ## Features
@@ -17,10 +18,13 @@
 - **Subcommands**: Organize commands for better functionality.
 - **Utility Functions**: Built-in utilities for logging and temporary replies.
 - **Customizable Configuration**: Manage settings for initialization and command logging.
+- **Deno Compatibility**: Run the bot with [Deno](https://deno.land/) for improved performance and security.
 
 ## Table of Contents
 
 - [Installation](#installation)
+  - [Node.js Setup](#nodejs-setup)
+  - [Deno Setup](#deno-setup)
 - [Usage](#usage)
   - [Starting the Bot](#starting-the-bot)
   - [Defining Commands](#defining-commands)
@@ -30,12 +34,14 @@
 
 ## Installation
 
-### Prerequisites
+### Node.js Setup
 
-- [Node.js](https://nodejs.org/) (v14 or higher)
+#### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14 or higher) OR [Deno](https://deno.land/)
 - [Git](https://git-scm.com/)
 
-### Steps
+#### Steps
 
 1. **Clone the Repository**
 
@@ -63,31 +69,72 @@
    Edit `settings.json` to customize the bot's settings:
 
    ```json
-  {
-      "defaultTempReply": 5000,
-      "invalidCommand": {
-          "enabled": true,
-          "timeout": 1,
-          "message": "## Woops! How did this happen?\nThere must have been an issue! This command does not exist! 😅"
-      },
-      "initMessage": {
-          "enabled": true,
-          "message": "Nala is ready for liftoff! 🚀"
-      },
-      "logCommandsInit": true,
-      "banCheckTime": 60,
-      "alertBanToUser": true,
-      "useOpenAIWhisperAPI": false,
-      "bugreport": {
-          "enabled": true,
-          "webhook": ""
-      }
-  }
+   {
+     "defaultTempReply": 5000,
+     "invalidCommand": {
+       "enabled": true,
+       "timeout": 1,
+       "message": "## Woops! How did this happen?\nThis command does not exist! 😅"
+     },
+     "initMessage": {
+       "enabled": true,
+       "message": "Nala is ready for liftoff! 🚀"
+     },
+     "logCommandsInit": true,
+     "banCheckTime": 60,
+     "alertBanToUser": true,
+     "useOpenAIWhisperAPI": false,
+     "bugreport": {
+       "enabled": true,
+       "webhook": ""
+     }
+   }
+   ```
+
+### Deno Setup
+
+#### Prerequisites
+
+- [Deno](https://deno.land/) (v1.30 or higher)
+
+#### Steps
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/Its3rr0rsWRLD/nala.git
+   cd nala
+   ```
+
+2. **Run the Bot with Deno**
+
+   Use the following command to start the bot:
+
+   ```bash
+   deno run --allow-net --allow-env --allow-read src/main.ts
+   ```
+
+3. **Set Up Environment Variables**
+
+   Ensure your `.env` file contains the bot token:
+
+   ```env
+   TOKEN=your_discord_bot_token_here
+   ```
+
+4. **Install Deno Dependencies** (Optional)
+
+   If any additional Deno modules are required, install them using:
+
+   ```bash
+   deno install [module]
    ```
 
 ## Usage
 
 ### Starting the Bot
+
+#### With Node.js
 
 Run the bot using:
 
@@ -95,61 +142,15 @@ Run the bot using:
 npm start
 ```
 
-The bot will log in and start listening for commands.
+#### With Deno
+
+```bash
+deno run --allow-net --allow-env --allow-read src/main.ts
+```
 
 ### Defining Commands
 
 Place your command files in the `commands` directory. Each command file should export an object with `data` and `execute` properties.
-
-#### Example Command: `commands/ping.js`
-
-```javascript
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const settings = require('../settings.json');
-
-module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('ping')
-    .setDescription('Replies with Pong and latency information'),
-  
-  execute: async (interaction, utils, client) => {
-    try {
-      const latency = Date.now() - interaction.createdTimestamp;
-      const apiLatency = Math.round(client.ws.ping);
-
-      const pingEmbed = new EmbedBuilder()
-        .setColor(0x00FF00)
-        .setTitle('Pong!')
-        .addFields(
-          { name: 'Latency', value: `${latency}ms`, inline: true },
-          { name: 'API Latency', value: `${apiLatency}ms`, inline: true }
-        )
-        .setTimestamp();
-
-      await utils.tempReply(interaction, {
-        embeds: [pingEmbed],
-        time: settings.defaultTempReply,
-        showTime: true,
-      });
-    } catch (error) {
-      console.error(`Error executing 'ping' command: ${error.message}`);
-      if (!interaction.replied && !interaction.deferred) {
-        await interaction.reply({
-          content: 'An error occurred while executing the command.',
-          ephemeral: true,
-        });
-      }
-    }
-  },
-};
-```
-
-### Available Commands
-
-- `/ping`: Replies with "Pong!" and displays latency information.
-- `/ban`: Bans a user with optional duration and reason.
-- `/unban`: Unbans a user by their ID.
-- `/kick`: Kicks a user from the server with an optional reason.
 
 ## Contributing
 

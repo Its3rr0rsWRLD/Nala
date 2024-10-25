@@ -1,20 +1,19 @@
 {
+  "scripts": {
+    "start": "node .",
+    "noToken": "node . noToken"
+  },
   "dependencies": {
+    "@discordjs/builders": "^1.9.0",
     "@discordjs/rest": "^2.4.0",
     "@vitalets/google-translate-api": "^9.2.0",
     "axios": "^1.7.7",
     "chalk": "^5.3.0",
-    "discord.js": "^14.16.2",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
-    "dotnet": "^1.1.4",
-    "form-data": "^4.0.0",
-    "jimp": "^1.6.0",
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.5.45",
-    "ms": "^2.1.3"
-  },
-  "scripts": {
-    "start": "node .",
-    "noToken": "node . noToken"
+    "form-data": "^4.0.1",
+    "fs": "0.0.1-security",
+    "moment-timezone": "^0.5.46",
+    "path": "^0.12.7"
   }
 }

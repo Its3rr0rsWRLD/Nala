@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const settings = require('../settings.json');
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const settings = require("../settings.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('ping')
-    .setDescription('Replies with Pong and latency information'),
+    .setName("ping")
+    .setDescription("Replies with Pong and latency information"),
 
   execute: async (interaction, utils, client) => {
     try {
@@ -13,10 +13,10 @@ module.exports = {
 
       const pingEmbed = new EmbedBuilder()
         .setColor(0x00FF00)
-        .setTitle('Pong!')
+        .setTitle("Pong!")
         .addFields(
-          { name: 'Latency', value: `${latency}ms`, inline: true },
-          { name: 'API Latency', value: `${apiLatency}ms`, inline: true }
+          { name: "Latency", value: `${latency}ms`, inline: true },
+          { name: "API Latency", value: `${apiLatency}ms`, inline: true },
         )
         .setTimestamp();
 
@@ -29,7 +29,7 @@ module.exports = {
       console.error(`Error executing 'ping' command: ${error.message}`);
       if (!interaction.replied && !interaction.deferred) {
         await interaction.reply({
-          content: 'An error occurred while executing the command.',
+          content: "An error occurred while executing the command.",
           ephemeral: true,
         });
       }

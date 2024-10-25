@@ -1,14 +1,15 @@
 /* Initialization */
-require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const Utils = require('./utils');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v10');
+require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
+const { Client, GatewayIntentBits, Collection, Routes } = require("discord.js");
+const Utils = require("./utils");
+const { REST } = require("@discordjs/rest");
 
-const settings = JSON.parse(fs.readFileSync(path.join(__dirname, 'settings.json'), 'utf8'));
-const dbPath = path.join(__dirname, 'db.json');
+const settings = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "settings.json"), "utf8"),
+);
+const dbPath = path.join(__dirname, "db.json");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
@@ -20,20 +21,24 @@ const utils = new Utils();
 /* Command Handler */
 function loadCommands() {
   client.commands.clear();
-  const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
+  const commandFiles = fs.readdirSync(path.join(__dirname, "commands")).filter(
+    (file) => file.endsWith(".js"),
+  );
   const commands = [];
 
   for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    if (command.data && typeof command.data.toJSON === 'function') {
-        commands.push(command.data.toJSON());
-        client.commands.set(command.data.name, command);
+    if (command.data && typeof command.data.toJSON === "function") {
+      commands.push(command.data.toJSON());
+      client.commands.set(command.data.name, command);
 
-        if (settings.logCommandsInit) {
-          utils.log(`Loaded command: ${command.data.name}`, 'info');
-        }
+      if (settings.logCommandsInit) {
+        utils.log(`Loaded command: ${command.data.name}`, "info");
+      }
     } else {
-        utils.error(`Command ${file} is missing 'data' property or 'toJSON' method.`);
+      utils.error(
+        `Command ${file} is missing 'data' property or 'toJSON' method.`,
+      );
     }
   }
 
@@ -42,29 +47,31 @@ function loadCommands() {
 
 const commands = loadCommands();
 
-client.once('ready', async () => {
+client.once("ready", async () => {
   if (!client.user) {
-    utils.error('Client user is null.');
+    utils.error("Client user is null.");
     return;
   }
 
   try {
     if (settings.logCommandsInit) {
-      utils.log('Started refreshing application (/) commands.', 'info');
+      utils.log("Started refreshing application (/) commands.", "info");
     }
 
-    const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
-    await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
+    const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+    await rest.put(Routes.applicationCommands(client.user.id), {
+      body: commands,
+    });
 
     if (settings.logCommandsInit) {
-      utils.log('Successfully reloaded application (/) commands.', 'info');
+      utils.log("Successfully reloaded application (/) commands.", "info");
     }
   } catch (error) {
     utils.error(`Error reloading commands: ${error}`);
   }
 
   if (settings.initMessage.enabled) {
-    utils.log(settings.initMessage.message, 'info');
+    utils.log(settings.initMessage.message, "info");
   }
 
   /* Ban Check Interval */
@@ -77,7 +84,7 @@ async function checkBans() {
 
   let db;
   try {
-    db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    db = JSON.parse(fs.readFileSync(dbPath, "utf8"));
   } catch (error) {
     utils.error(`Error reading db file: ${error}`);
     return;
@@ -92,10 +99,12 @@ async function checkBans() {
       if (banInfo.unbanTimestamp && Date.now() > banInfo.unbanTimestamp) {
         try {
           await guild.members.unban(userId);
-          utils.log(`Unbanned user ${userId} from guild ${guildId}`, 'success');
+          utils.log(`Unbanned user ${userId} from guild ${guildId}`, "success");
           delete db[guildId][userId];
         } catch (error) {
-          utils.error(`Failed to unban user ${userId} from guild ${guildId}: ${error.message}`);
+          utils.error(
+            `Failed to unban user ${userId} from guild ${guildId}: ${error.message}`,
+          );
         }
       }
     }
@@ -109,7 +118,7 @@ async function checkBans() {
 }
 
 /* Event Listener */
-client.on('interactionCreate', async interaction => {
+client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
 
   const command = client.commands.get(interaction.commandName);
@@ -129,7 +138,10 @@ client.on('interactionCreate', async interaction => {
     utils.error(`Error executing command ${interaction.commandName}: ${error}`);
     if (!interaction.replied && !interaction.deferred) {
       try {
-        await interaction.reply({ content: 'There was an error executing this command!', ephemeral: true });
+        await interaction.reply({
+          content: "There was an error executing this command!",
+          ephemeral: true,
+        });
       } catch (replyError) {
         utils.error(`Error sending error reply: ${replyError}`);
       }
@@ -139,15 +151,15 @@ client.on('interactionCreate', async interaction => {
 
 /* Log Command Initialization */
 if (settings.logCommandsInit) {
-  utils.log('Commands have been initialized.', 'info');
+  utils.log("Commands have been initialized.", "info");
 }
 
 /* Login or Exit */
-if (process.argv.includes('noToken')) {
-  utils.log('noToken flag detected. Exiting...', 'info');
+if (process.argv.includes("noToken")) {
+  utils.log("noToken flag detected. Exiting...", "info");
   setTimeout(() => process.exit(0), 1000);
 } else {
-  client.login(process.env.TOKEN).catch(error => {
+  client.login(process.env.TOKEN).catch((error) => {
     utils.error(`Failed to login: ${error}`);
     process.exit(1);
   });
