@@ -58,7 +58,7 @@ module.exports = {
     const message = await interaction.reply({
       embeds: [pages[currentPage]],
       components: [buttons],
-      ephemeral: true,
+      ephemeral: false,
       fetchReply: true,
     });
 

@@ -45,7 +45,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -56,7 +56,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "I do not have permission to ban members.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -66,21 +66,21 @@ module.exports = {
     if (!member) {
       return interaction.reply({
         content: "User not found in this server.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
     if (user.id === interaction.user.id) {
       return interaction.reply({
         content: "You cannot ban yourself.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
     if (user.id === interaction.client.user.id) {
       return interaction.reply({
         content: "I cannot ban myself.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -90,7 +90,7 @@ module.exports = {
       return interaction.reply({
         content:
           "You cannot ban this user because they have a higher or equal role.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -101,7 +101,7 @@ module.exports = {
       return interaction.reply({
         content:
           "I cannot ban this user because their role is higher than mine.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -113,7 +113,7 @@ module.exports = {
       if (!duration || duration <= 0) {
         return interaction.reply({
           content: "Invalid duration format.",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
       unbanTimestamp = Date.now() + duration;
@@ -150,13 +150,13 @@ module.exports = {
         content: `Successfully banned ${user.tag}${
           durationStr ? ` for ${durationStr}` : ""
         }.`,
-        ephemeral: true,
+        ephemeral: false,
       });
     } catch (error) {
       console.error(`Failed to ban ${user.tag}: ${error.message}`);
       return interaction.reply({
         content: `Failed to ban ${user.tag}.`,
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 

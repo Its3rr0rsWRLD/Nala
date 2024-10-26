@@ -24,7 +24,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -40,13 +40,13 @@ module.exports = {
       const member = interaction.guild.members.cache.get(userId);
 
       if (!member) {
-        return interaction.reply({ content: "User not found.", ephemeral: true });
+        return interaction.reply({ content: "User not found.", ephemeral: false });
       }
 
       if (!warns[guildId] || !warns[guildId][userId]) {
         return interaction.reply({
           content: "This user has no warnings.",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
 
@@ -69,7 +69,7 @@ module.exports = {
     if (!warns[guildId] || Object.keys(warns[guildId]).length === 0) {
       return interaction.reply({
         content: "There are no warnings in this server.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 

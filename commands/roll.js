@@ -14,7 +14,7 @@ module.exports = {
     if (sides <= 1) {
       return interaction.reply({
         content: "The dice must have at least 2 sides.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
     const result = Math.floor(Math.random() * sides) + 1;

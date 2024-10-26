@@ -21,14 +21,14 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
     if (amount < 1 || amount > 100) {
       return interaction.reply({
         content: "Please enter a number between 1 and 100.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -36,13 +36,13 @@ module.exports = {
       console.error(error);
       interaction.reply({
         content: "An error occurred while trying to delete messages.",
-        ephemeral: true,
+        ephemeral: false,
       });
     });
 
     await interaction.reply({
       content: `Deleted ${amount} messages.`,
-      ephemeral: true,
+      ephemeral: false,
     });
   },
 };

@@ -36,7 +36,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -47,12 +47,12 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "I do not have permission to mute members.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
     if (!member) {
-      return interaction.reply({ content: "User not found.", ephemeral: true });
+      return interaction.reply({ content: "User not found.", ephemeral: false });
     }
 
     if (
@@ -60,7 +60,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You cannot mute this user.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -68,7 +68,7 @@ module.exports = {
     if (!time || time > 28 * 24 * 60 * 60 * 1000) {
       return interaction.reply({
         content: "Please specify a valid duration (maximum 28 days).",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -89,7 +89,7 @@ module.exports = {
       console.error(error);
       await interaction.reply({
         content: "An error occurred while trying to mute the user.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
   },

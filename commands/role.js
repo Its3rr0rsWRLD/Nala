@@ -35,7 +35,7 @@ module.exports = {
     if (!selfAssignableRoles.includes(role.id)) {
       return interaction.reply({
         content: "You cannot assign or remove this role.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -43,25 +43,25 @@ module.exports = {
       if (member.roles.cache.has(role.id)) {
         return interaction.reply({
           content: "You already have this role.",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
       await member.roles.add(role);
       await interaction.reply({
         content: `Role ${role.name} has been added to you.`,
-        ephemeral: true,
+        ephemeral: false,
       });
     } else if (subcommand === "remove") {
       if (!member.roles.cache.has(role.id)) {
         return interaction.reply({
           content: "You do not have this role.",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
       await member.roles.remove(role);
       await interaction.reply({
         content: `Role ${role.name} has been removed from you.`,
-        ephemeral: true,
+        ephemeral: false,
       });
     }
   },

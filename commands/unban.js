@@ -36,7 +36,7 @@ module.exports = {
             .setColor(0xFF0000)
             .setDescription("You do not have permission to use this command."),
         ],
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -49,7 +49,7 @@ module.exports = {
             .setColor(0xFF0000)
             .setDescription("I do not have permission to unban members."),
         ],
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -83,7 +83,7 @@ module.exports = {
               .setColor(0x00FF00)
               .setDescription(`Successfully unbanned <@${userId}>.`),
           ],
-          ephemeral: true,
+          ephemeral: false,
         });
       } else {
         await interaction.reply({
@@ -94,7 +94,7 @@ module.exports = {
                 "User was not found in the server ban list. No action taken.",
               ),
           ],
-          ephemeral: true,
+          ephemeral: false,
         });
       }
 
@@ -129,7 +129,7 @@ module.exports = {
               "An error occurred while trying to unban the user.",
             ),
         ],
-        ephemeral: true,
+        ephemeral: false,
       });
     }
   },

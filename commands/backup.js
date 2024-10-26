@@ -14,7 +14,7 @@ module.exports = {
       return interaction.reply({
         content:
           "You do not have the required permissions to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 

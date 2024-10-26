@@ -30,7 +30,7 @@ module.exports = {
     if (!settings.bugreport.enabled) {
       return utils.tempReply(interaction, {
         content: "Bug reporting is disabled.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -41,7 +41,7 @@ module.exports = {
     if (!webhookURL) {
       return utils.tempReply(interaction, {
         content: "Bug reporting is not properly configured.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 

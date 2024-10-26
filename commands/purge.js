@@ -25,21 +25,21 @@ module.exports = {
       if (messagesToDelete <= 0 || messagesToDelete > 100) {
         return interaction.reply({
           content: "You can only purge between 1 and 100 messages at a time.",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
 
       await channel.bulkDelete(messagesToDelete, true);
       await interaction.reply({
         content: `Successfully deleted ${messagesToDelete} messages.`,
-        ephemeral: true,
+        ephemeral: false,
       });
     } else if (recreateChannel) {
       const oldChannel = interaction.channel;
 
       await interaction.reply({
         content: "Channel will be deleted and recreated.",
-        ephemeral: true,
+        ephemeral: false,
       });
       const newChannel = await oldChannel.clone();
       await oldChannel.delete();
@@ -48,7 +48,7 @@ module.exports = {
       await interaction.reply({
         content:
           "Please provide either messages to purge or choose to recreate the channel.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
   },

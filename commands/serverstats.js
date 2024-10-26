@@ -58,7 +58,7 @@ module.exports = {
       const jsonBuffer = Buffer.from(JSON.stringify(guildData, null, 2));
       const attachment = new AttachmentBuilder(jsonBuffer, { name: "server_data.json" });
 
-      await btnInteraction.reply({ files: [attachment], ephemeral: true });
+      await btnInteraction.reply({ files: [attachment], ephemeral: false });
     });
 
     collector.on("end", async () => {

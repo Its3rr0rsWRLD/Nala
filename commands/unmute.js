@@ -22,7 +22,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -33,18 +33,18 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "I do not have permission to unmute members.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
     if (!member) {
-      return interaction.reply({ content: "User not found.", ephemeral: true });
+      return interaction.reply({ content: "User not found.", ephemeral: false });
     }
 
     if (!member.isCommunicationDisabled()) {
       return interaction.reply({
         content: "This user is not muted.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -63,7 +63,7 @@ module.exports = {
       console.error(error);
       await interaction.reply({
         content: "An error occurred while trying to unmute the user.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
   },

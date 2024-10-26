@@ -30,7 +30,7 @@ module.exports = {
       if (!interaction.replied && !interaction.deferred) {
         await interaction.reply({
           content: "An error occurred while executing the command.",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
     }

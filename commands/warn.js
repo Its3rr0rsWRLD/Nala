@@ -31,12 +31,12 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
     if (!member) {
-      return interaction.reply({ content: "User not found.", ephemeral: true });
+      return interaction.reply({ content: "User not found.", ephemeral: false });
     }
 
     let warns = {};

@@ -21,7 +21,7 @@ module.exports = {
     if (min >= max) {
       return interaction.reply({
         content: "Minimum value must be less than maximum value.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 

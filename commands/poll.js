@@ -31,7 +31,7 @@ module.exports = {
       if (optionList.length > 10) {
         return interaction.reply({
           content: "You can have a maximum of 10 options.",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
 

@@ -40,7 +40,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -52,7 +52,7 @@ module.exports = {
     ) {
       return interaction.reply({
         content: "I do not have permission to kick members.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -64,7 +64,7 @@ module.exports = {
     if (!member) {
       return interaction.reply({
         content: "User not found in this server.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -72,7 +72,7 @@ module.exports = {
     if (user.id === interaction.user.id) {
       return interaction.reply({
         content: "You cannot kick yourself.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -80,7 +80,7 @@ module.exports = {
     if (user.id === interaction.client.user.id) {
       return interaction.reply({
         content: "I cannot kick myself.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -91,7 +91,7 @@ module.exports = {
       return interaction.reply({
         content:
           "You cannot kick this user because they have a higher or equal role.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -103,7 +103,7 @@ module.exports = {
       return interaction.reply({
         content:
           "I cannot kick this user because their role is higher than mine.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
@@ -128,13 +128,13 @@ module.exports = {
       await member.kick(reason);
       await interaction.reply({
         content: `Successfully kicked ${user.tag}.`,
-        ephemeral: true,
+        ephemeral: false,
       });
     } catch (error) {
       utils.error(`Failed to kick ${user.tag}: ${error.message}`);
       await interaction.reply({
         content: `Failed to kick ${user.tag}.`,
-        ephemeral: true,
+        ephemeral: false,
       });
     }
   },

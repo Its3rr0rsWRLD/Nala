@@ -12,14 +12,14 @@ module.exports = {
     if (interaction.user.id !== ownerId) {
       return interaction.reply({
         content: "You do not have permission to use this command.",
-        ephemeral: true,
+        ephemeral: false,
       });
     }
 
     // Confirm shutdown
     await interaction.reply({
       content: "Shutting down the bot...",
-      ephemeral: true,
+      ephemeral: false,
     });
 
     console.log("Bot is shutting down via the shutdown command.");

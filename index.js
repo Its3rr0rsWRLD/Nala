@@ -140,7 +140,7 @@ client.on("interactionCreate", async (interaction) => {
       try {
         await interaction.reply({
           content: "There was an error executing this command!",
-          ephemeral: true,
+          ephemeral: false,
         });
       } catch (replyError) {
         utils.error(`Error sending error reply: ${replyError}`);
