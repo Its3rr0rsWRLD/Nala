@@ -2,7 +2,7 @@
   "scripts": {
     "start": "node .",
     "noToken": "node . noToken",
-    "run install": "npm install\nnode ."
+    "install": "npm install\nnode ."
   },
   "dependencies": {
     "@discordjs/builders": "^1.9.0",
