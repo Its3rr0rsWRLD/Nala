@@ -10,7 +10,6 @@ module.exports = {
   execute: async (interaction) => {
     const member = interaction.member;
 
-    // Check if the user has administrator permissions
     if (!member.permissions.has("ADMINISTRATOR")) {
       return interaction.reply({
         content:
@@ -40,11 +39,12 @@ module.exports = {
       })),
     };
 
-    const backupPath = path.join(
-      __dirname,
-      "../temp",
-      `${guild.id}_backup.json`,
-    );
+    const backupDir = path.join(__dirname, "../temp");
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+
+    const backupPath = path.join(backupDir, `${guild.id}_backup.json`);
     fs.writeFileSync(backupPath, JSON.stringify(backupData, null, 2));
 
     await interaction.reply({
@@ -52,6 +52,6 @@ module.exports = {
       files: [backupPath],
     });
 
-    fs.unlinkSync(backupPath); // Clean up
+    fs.unlinkSync(backupPath);
   },
 };

@@ -1,5 +1,8 @@
 {
   "defaultTempReply": 5000,
+  "help": {
+    "max_fields": 10
+  },
   "invalidCommand": {
     "enabled": true,
     "timeout": 1,
@@ -15,7 +18,16 @@
   "useOpenAIWhisperAPI": false,
   "bugreport": {
     "enabled": true,
-    "webhook": ""
+    "webhook": "PUT IN .ENV AT BUGREPORT_WEBHOOK",
+    "automatic": true
   },
-  "transcribeHost": "http://nalaai.railway.internal:5000/transcribe"
+  "transcribeHost": "http://127.0.0.1:5000/transcribe",
+  "// COMMENTS \\": {
+    "transcribeHost": [
+      "This can be a local address like http://127.0.0.1:5000/transcribe",
+      "or a public address like https://transcribe.example.com/transcribe",
+      "but it needs to be running NalaAI's transcribe server.",
+      "Find it at https://github.com/Its3rr0rsWRLD/NalaAI"
+    ]
+  }
 }

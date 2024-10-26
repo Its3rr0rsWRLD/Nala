@@ -1,16 +1,13 @@
-const {
-  SlashCommandBuilder,
-  EmbedBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-} = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const FormData = require("form-data");
+const Utils = require("../utils");
+const utils = new Utils();
+
 const settings = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "..", "settings.json"), "utf8"),
+  fs.readFileSync(path.join(__dirname, "..", "settings.json"), "utf8")
 );
 
 module.exports = {
@@ -18,7 +15,8 @@ module.exports = {
     .setName("transcribe")
     .setDescription("Transcribe an uploaded audio file")
     .addAttachmentOption((option) =>
-      option.setName("audio")
+      option
+        .setName("audio")
         .setDescription("The audio file to transcribe (mp3, wav, m4a, etc.)")
         .setRequired(true)
     ),
@@ -29,7 +27,7 @@ module.exports = {
     const audioAttachment = interaction.options.getAttachment("audio");
     if (!audioAttachment) {
       return interaction.editReply(
-        "Please provide an audio file to transcribe.",
+        "Please provide an audio file to transcribe."
       );
     }
 
@@ -38,7 +36,7 @@ module.exports = {
 
     if (!validExtensions.includes(fileExtension)) {
       return interaction.editReply(
-        "Unsupported audio format. Please upload a valid audio file (mp3, wav, m4a, ogg, webm).",
+        "Unsupported audio format. Please upload a valid audio file (mp3, wav, m4a, ogg, webm)."
       );
     }
 
@@ -77,37 +75,38 @@ module.exports = {
       });
 
       if (!transcribeResponse.data || !transcribeResponse.data.transcription) {
-        throw new Error("Invalid response from the transcription service.");
+        return utils.error(
+          new Error("Invalid response from the transcription service."),
+          interaction
+        );
       }
 
       const transcription = transcribeResponse.data.transcription;
-      transcriptionPath = path.join(tempDir, `${interaction.id}.txt`);
-      fs.writeFileSync(transcriptionPath, transcription);
+      const MAX_EMBED_LENGTH = 4096;
 
-      const embed = new EmbedBuilder()
-        .setTitle("Transcription Complete")
-        .setDescription(
-          "The transcription of your audio file is complete. Please find the transcription attached as a TXT file.",
-        )
-        .setColor("#00FF00");
+      // Check if the transcription is too long for an embed
+      const embed = new EmbedBuilder().setTitle("Transcription Complete").setColor("#00FF00");
 
-      const row = new ActionRowBuilder()
-        .addComponents(
-          new ButtonBuilder()
-            .setCustomId("report_inaccuracy")
-            .setLabel("Report Inaccuracy")
-            .setStyle(ButtonStyle.Danger),
+      if (transcription.length <= MAX_EMBED_LENGTH - 20) { // 20 for padding
+        embed.setDescription(`\`\`\`\n${transcription}\n\`\`\`\nTo report inaccuracies, please use /bugreport.`);
+        await interaction.editReply({ embeds: [embed] });
+      } else {
+        transcriptionPath = path.join(tempDir, `${interaction.id}.txt`);
+        fs.writeFileSync(transcriptionPath, transcription);
+
+        embed.setDescription(
+          "The transcription of your audio file is complete.\nThe transcription was too long to display here, so it has been attached as a TXT file.\nTo report inaccuracies, please use /bugreport."
         );
 
-      await interaction.editReply({
-        embeds: [embed],
-        files: [transcriptionPath],
-        components: [row],
-      });
+        await interaction.editReply({
+          embeds: [embed],
+          files: [transcriptionPath],
+        });
+      }
     } catch (error) {
-      console.error(`Error during transcription: ${error.message}`);
+      await utils.error(error, interaction);
       await interaction.editReply(
-        "An error occurred while transcribing the audio file.",
+        "An error occurred while transcribing the audio file."
       );
     } finally {
       if (fs.existsSync(audioPath)) fs.unlinkSync(audioPath);

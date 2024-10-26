@@ -1,3 +1,16 @@
+const fs = require("fs");
+const dotenv = require("dotenv");
+const axios = require("axios");
+const path = require("path");
+
+let settings;
+try {
+  settings = JSON.parse(fs.readFileSync(path.join(__dirname, "settings.json"), "utf8"));
+} catch (error) {
+  console.error("Failed to load settings:", error);
+  settings = { bugreport: { automatic: false } }; // Default if settings fail to load
+}
+
 class Utils {
   constructor() {}
 
@@ -9,9 +22,6 @@ class Utils {
     const showTime = options.showTime || false;
 
     if (time === 1) {
-      const settings = await import("./settings.json", {
-        assert: { type: "json" },
-      });
       time = settings.defaultTempReply || 5000;
     }
 
@@ -22,8 +32,7 @@ class Utils {
         if (showTime && embeds.length > 0) {
           const embed = embeds[0];
           const currentDescription = embed.data.description || "";
-          const updatedDescription =
-            `${currentDescription}\n-# Deleting message <t:${deleteAt}:R>`;
+          const updatedDescription = `${currentDescription}\n-# Deleting message <t:${deleteAt}:R>`;
           embed.setDescription(updatedDescription);
         } else if (showTime) {
           content += `\n-# Deleting message <t:${deleteAt}:R>`;
@@ -64,50 +73,88 @@ class Utils {
     switch (color) {
       case "success":
         emoji = "✅";
-        console.log(chalk.hex("#00FF00")(emoji + "  " + message)); // Green
+        console.log(chalk.hex("#00FF00")(emoji + "  " + message));
         break;
       case "error":
         emoji = "❌";
-        console.log(chalk.hex("#FF0000")(emoji + "  " + message)); // Red
+        console.log(chalk.hex("#FF0000")(emoji + "  " + message));
         break;
       case "warning":
         emoji = "⚠️";
-        console.log(chalk.hex("#FFFF00")(emoji + "  " + message)); // Yellow
+        console.log(chalk.hex("#FFFF00")(emoji + "  " + message));
         break;
       case "info":
         emoji = "✔️";
-        console.log(chalk.hex("#9B59B6")(emoji + "  " + message)); // Purple
+        console.log(chalk.hex("#9B59B6")(emoji + "  " + message));
         break;
       case "red":
         emoji = "🔴";
-        console.log(chalk.hex("#FF0000")(emoji + "  " + message)); // Red
+        console.log(chalk.hex("#FF0000")(emoji + "  " + message));
         break;
       case "green":
         emoji = "🟢";
-        console.log(chalk.hex("#00FF00")(emoji + "  " + message)); // Green
+        console.log(chalk.hex("#00FF00")(emoji + "  " + message));
         break;
       case "yellow":
         emoji = "🟡";
-        console.log(chalk.hex("#FFFF00")(emoji + "  " + message)); // Yellow
+        console.log(chalk.hex("#FFFF00")(emoji + "  " + message));
         break;
       case "blue":
         emoji = "🔵";
-        console.log(chalk.hex("#0000FF")(emoji + "  " + message)); // Blue
+        console.log(chalk.hex("#0000FF")(emoji + "  " + message));
         break;
       case "purple":
         emoji = "🟣";
-        console.log(chalk.hex("#9B59B6")(emoji + "  " + message)); // Purple
+        console.log(chalk.hex("#9B59B6")(emoji + "  " + message));
         break;
       default:
         emoji = "ⓘ";
-        console.log(chalk.hex("#FFFFFF")(emoji + "  " + message)); // Default to white
+        console.log(chalk.hex("#FFFFFF")(emoji + "  " + message));
         break;
     }
   }
 
-  async error(error) {
+  async bugReport(error, interaction) {
+    const webhookURL = dotenv.parse(fs.readFileSync(".env")).BUGREPORT_WEBHOOK;
+    if (!webhookURL) {
+      return interaction.reply({
+        content: "Bug reporting is not properly configured.",
+        ephemeral: false,
+      });
+    }
+
+    const embed = {
+      title: "New Bug Report",
+      fields: [
+        { name: "User", value: `${interaction?.user?.tag || "Internal"} (${interaction?.user?.id || "Unknown ID"})`, inline: false },
+        { name: "Command", value: interaction?.commandName || "N/A", inline: false },
+        { name: "Description", value: error.toString(), inline: false },
+        {
+          name: "Server",
+          value: `${interaction?.guild?.name || "Unknown Server"} (${interaction?.guild?.id || "Unknown ID"})`,
+          inline: false,
+        },
+      ],
+      timestamp: new Date(),
+      color: 0xFF0000,
+    };
+
+    try {
+      await axios.post(webhookURL, {
+        content: null,
+        embeds: [embed],
+      });
+    } catch (err) {
+      this.log(`Failed to send bug report: ${err}`, "error");
+    }
+  }
+
+  async error(error, interaction) {
     const firstLine = error.toString().split("\n")[0];
     this.log(firstLine, "error");
+    if (settings.bugreport && settings.bugreport.automatic) {
+      await this.bugReport(error, interaction);
+    }
   }
 }
 

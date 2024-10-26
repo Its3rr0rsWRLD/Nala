@@ -130,3 +130,5 @@ dist
 .pnp.*
 pnpm-lock.yaml
 db.json
+/.vscode
+warns.json

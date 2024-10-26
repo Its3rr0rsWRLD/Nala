@@ -1,31 +1,33 @@
 const { SlashCommandBuilder } = require("discord.js");
-const translate = require("@vitalets/google-translate-api");
+const { translate } = require("@vitalets/google-translate-api");
+const Utils = require("../utils");
+const utils = new Utils();
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("translate")
     .setDescription("Translates text to a specified language")
     .addStringOption((option) =>
-      option.setName("text").setDescription("Text to translate").setRequired(
-        true,
-      )
+      option.setName("text").setDescription("Text to translate").setRequired(true)
     )
     .addStringOption((option) =>
       option.setName("language").setDescription(
-        "Target language (e.g., en, es)",
+        "Target language (e.g., en, es)"
       ).setRequired(true)
     ),
 
   execute: async (interaction) => {
     const text = interaction.options.getString("text");
-    const language = interaction.options.getString("language");
+    const targetLanguage = interaction.options.getString("language");
 
     try {
-      const res = await translate(text, { to: language });
+      const res = await translate(text, { to: targetLanguage });
 
-      await interaction.reply(`**Translated Text:**\n${res.text}`);
+      await interaction.reply(
+        `**Detected Language:** ${res.from.language.iso.toUpperCase()}\n**Translated Text:**\n${res.text}`
+      );
     } catch (error) {
-      console.error(error);
+      utils.error(error);
       await interaction.reply("An error occurred while translating the text.");
     }
   },
