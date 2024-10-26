@@ -88,14 +88,14 @@ module.exports = {
       const embed = new EmbedBuilder().setTitle("Transcription Complete").setColor("#00FF00");
 
       if (transcription.length <= MAX_EMBED_LENGTH - 20) { // 20 for padding
-        embed.setDescription(`\`\`\`\n${transcription}\n\`\`\`\nTo report inaccuracies, please use /bugreport.`);
+        embed.setDescription(`\`\`\`\n${transcription}\n\`\`\`\nTo report inaccuracies, please use /bugReport.`);
         await interaction.editReply({ embeds: [embed] });
       } else {
         transcriptionPath = path.join(tempDir, `${interaction.id}.txt`);
         fs.writeFileSync(transcriptionPath, transcription);
 
         embed.setDescription(
-          "The transcription of your audio file is complete.\nThe transcription was too long to display here, so it has been attached as a TXT file.\nTo report inaccuracies, please use /bugreport."
+          "The transcription of your audio file is complete.\nThe transcription was too long to display here, so it has been attached as a TXT file.\nTo report inaccuracies, please use /bugReport."
         );
 
         await interaction.editReply({

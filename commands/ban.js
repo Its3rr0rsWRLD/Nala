@@ -119,7 +119,7 @@ module.exports = {
       unbanTimestamp = Date.now() + duration;
     }
 
-    if (settings.alertBanToUser) {
+    if (settings.alertUser.ban) {
       const banEmbed = {
         color: 0xFF0000,
         title: `You have been banned from ${interaction.guild.name}`,

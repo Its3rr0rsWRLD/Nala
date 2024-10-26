@@ -11,7 +11,7 @@ const settings = JSON.parse(
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("bugreport")
+    .setName("bugReport")
     .setDescription("Report a bug or issue")
     .addStringOption((option) =>
       option
@@ -27,7 +27,7 @@ module.exports = {
     ),
 
   execute: async (interaction) => {
-    if (!settings.bugreport.enabled) {
+    if (!settings.bugReport.enabled) {
       return utils.tempReply(interaction, {
         content: "Bug reporting is disabled.",
         ephemeral: false,
@@ -37,7 +37,7 @@ module.exports = {
     const commandName = interaction.options.getString("command");
     const description = interaction.options.getString("description");
 
-    const webhookURL = dotenv.parse(fs.readFileSync(".env")).BUGREPORT_WEBHOOK;
+    const webhookURL = dotenv.parse(fs.readFileSync(".env")).bugReport_WEBHOOK;
     if (!webhookURL) {
       return utils.tempReply(interaction, {
         content: "Bug reporting is not properly configured.",

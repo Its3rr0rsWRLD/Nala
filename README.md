@@ -84,7 +84,7 @@ flexible command structure and seamless integration with Discord's API.
      "banCheckTime": 60,
      "alertBanToUser": true,
      "useOpenAIWhisperAPI": false,
-     "bugreport": {
+     "bugReport": {
        "enabled": true,
        "webhook": ""
      }

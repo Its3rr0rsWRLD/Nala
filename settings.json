@@ -14,11 +14,14 @@
   },
   "logCommandsInit": true,
   "banCheckTime": 60,
-  "alertBanToUser": true,
+  "alertUser": {
+    "ban": true,
+    "warn": true
+  },
   "useOpenAIWhisperAPI": false,
-  "bugreport": {
+  "bugReport": {
     "enabled": true,
-    "webhook": "PUT IN .ENV AT BUGREPORT_WEBHOOK",
+    "webhook": "PUT IN .ENV AT bugReport_WEBHOOK",
     "automatic": true
   },
   "transcribeHost": "http://127.0.0.1:5000/transcribe",

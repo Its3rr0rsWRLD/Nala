@@ -8,7 +8,7 @@ try {
   settings = JSON.parse(fs.readFileSync(path.join(__dirname, "settings.json"), "utf8"));
 } catch (error) {
   console.error("Failed to load settings:", error);
-  settings = { bugreport: { automatic: false } }; // Default if settings fail to load
+  settings = { bugReport: { automatic: false } }; // Default if settings fail to load
 }
 
 class Utils {
@@ -115,7 +115,7 @@ class Utils {
   }
 
   async bugReport(error, interaction) {
-    const webhookURL = dotenv.parse(fs.readFileSync(".env")).BUGREPORT_WEBHOOK;
+    const webhookURL = dotenv.parse(fs.readFileSync(".env")).bugReport_WEBHOOK;
     if (!webhookURL) {
       return interaction.reply({
         content: "Bug reporting is not properly configured.",
@@ -152,7 +152,7 @@ class Utils {
   async error(error, interaction) {
     const firstLine = error.toString().split("\n")[0];
     this.log(firstLine, "error");
-    if (settings.bugreport && settings.bugreport.automatic) {
+    if (settings.bugReport && settings.bugReport.automatic) {
       await this.bugReport(error, interaction);
     }
   }

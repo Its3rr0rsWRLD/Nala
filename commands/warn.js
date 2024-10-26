@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 
 const warnsFilePath = path.join(__dirname, "../warns.json");
+const settings = require("../settings.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -62,15 +63,33 @@ module.exports = {
       .setColor(0xFFA500)
       .setTitle("User Warned")
       .addFields(
-        { name: "User", value: `${target.tag}`, inline: true },
-        { name: "Reason", value: reason, inline: false },
-        {
-          name: "Total Warnings",
-          value: `${warns[guildId][userId].length}`,
-          inline: true,
-        },
+      { name: "User", value: `${target.tag}`, inline: true },
+      { name: "Reason", value: reason, inline: false },
+      {
+        name: "Total Warnings",
+        value: `${warns[guildId][userId].length}`,
+        inline: true,
+      },
       )
       .setTimestamp();
+
+    if (settings.alertUser.warn) {
+      try {
+        await target.send({
+          embeds: [
+            new EmbedBuilder()
+              .setColor(0xFFA500)
+              .setTitle("You have been warned")
+              .setDescription(
+                `You have been warned in ${interaction.guild.name} for: ${reason}`,
+              )
+              .setTimestamp(),
+          ],
+        });
+      } catch (error) {
+        console.error(`Failed to send warning DM to user: ${error}`);
+      }
+    }
 
     await interaction.reply({ embeds: [warnEmbed] });
   },
