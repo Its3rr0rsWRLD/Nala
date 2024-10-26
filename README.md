@@ -91,12 +91,6 @@ flexible command structure and seamless integration with Discord's API.
    }
    ```
 
-### Deno Setup
-
-#### Prerequisites
-
-- [Deno](https://deno.land/) (v1.30 or higher)
-
 #### Steps
 
 1. **Clone the Repository**
