@@ -2,7 +2,7 @@
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-const { Client, GatewayIntentBits, Collection, Routes } = require("discord.js");
+const { Client, Partials, GatewayIntentBits, Collection, Routes } = require("discord.js");
 const Utils = require("./utils");
 const { REST } = require("@discordjs/rest");
 
@@ -12,7 +12,12 @@ const settings = JSON.parse(
 const dbPath = path.join(__dirname, "db.json");
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.DirectMessages
+  ],
+  partials: [Partials.Channel],
 });
 
 client.commands = new Collection();
@@ -74,7 +79,6 @@ client.once("ready", async () => {
     utils.log(settings.initMessage.message, "info");
   }
 
-  /* Ban Check Interval */
   setInterval(checkBans, settings.banCheckTime * 1000);
 });
 
@@ -145,6 +149,21 @@ client.on("interactionCreate", async (interaction) => {
       } catch (replyError) {
         utils.error(`Error sending error reply: ${replyError}`);
       }
+    }
+  }
+});
+
+/* AI DM Integration */
+client.on("messageCreate", async (message) => {
+  if (!message.author.bot && !message.guild) {
+    try {
+      // typing
+      await message.channel.sendTyping();
+      const response = await utils.generateXAIResponse(message.content);
+      await message.channel.send(response);
+    } catch (error) {
+      utils.error(`Error processing message: ${error}`);
+      await message.channel.send("There was an error processing your message.");
     }
   }
 });

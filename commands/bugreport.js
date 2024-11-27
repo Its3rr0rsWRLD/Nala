@@ -11,7 +11,7 @@ const settings = JSON.parse(
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("bugReport")
+    .setName("bugreport")
     .setDescription("Report a bug or issue")
     .addStringOption((option) =>
       option

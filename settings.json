@@ -1,5 +1,6 @@
 {
   "defaultTempReply": 5000,
+  "debug": false,
   "help": {
     "max_fields": 10
   },

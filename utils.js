@@ -114,13 +114,22 @@ class Utils {
     }
   }
 
+  async debug(message, color) {
+    if (settings.debug === "true") {
+      if (!color) { color = "info"; }
+      this.log(message, color);
+    }
+  }
+
   async bugReport(error, interaction) {
     const webhookURL = dotenv.parse(fs.readFileSync(".env")).bugReport_WEBHOOK;
     if (!webhookURL) {
-      return interaction.reply({
-        content: "Bug reporting is not properly configured.",
-        ephemeral: false,
-      });
+      if (interaction) {
+        return interaction.reply({
+          content: "Bug reporting is not properly configured.",
+          ephemeral: false,
+        });
+      }
     }
 
     const embed = {
@@ -154,6 +163,35 @@ class Utils {
     this.log(firstLine, "error");
     if (settings.bugReport && settings.bugReport.automatic) {
       await this.bugReport(error, interaction);
+    }
+  }
+
+  async generateXAIResponse(messageContent) {
+    try {
+      const response = await axios.post("https://api.x.ai/v1/chat/completions", {
+        messages: [
+          {
+            role: "system",
+            content: "You are an assistant named Nala, and you are a Discord Bot."
+          },
+          {
+            role: "user",
+            content: messageContent
+          }
+        ],
+        model: "grok-beta",
+        stream: false,
+        temperature: 0
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.XAI_API_KEY}`
+        }
+      });
+      return response.data.choices[0].message.content;
+    } catch (error) {
+      this.log(`Failed to generate XAI response: ${error}`, "error");
+      return "Sorry, I'm having trouble responding right now.";
     }
   }
 }
