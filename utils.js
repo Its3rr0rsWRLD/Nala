@@ -151,10 +151,16 @@ class Utils {
     const webhookURL = settings.bugReport.webhookURL;
     if (!webhookURL) {
       if (interaction) {
-        return interaction.reply({
-          content: "Bug reporting is not properly configured.",
-          ephemeral: false,
-        });
+        if (interaction.replied || interaction.deferred) {
+          return interaction.editReply({
+            content: "Bug reporting is not properly configured.",
+          });
+        } else {
+          return interaction.reply({
+            content: "Bug reporting is not properly configured.",
+            ephemeral: false,
+          });
+        }
       }
     }
 
