@@ -148,7 +148,7 @@ class Utils {
   }
 
   async bugReport(error, interaction) {
-    const webhookURL = dotenv.parse(fs.readFileSync(".env")).bugReport_WEBHOOK;
+    const webhookURL = settings.bugReport.webhookURL;
     if (!webhookURL) {
       if (interaction) {
         return interaction.reply({
