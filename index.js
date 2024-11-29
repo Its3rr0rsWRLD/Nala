@@ -6,9 +6,9 @@ const { Client, Partials, GatewayIntentBits, Collection, Routes } = require("dis
 const Utils = require("./utils");
 const { REST } = require("@discordjs/rest");
 
-const settings = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "settings.json"), "utf8"),
-);
+const utils = new Utils();
+
+const settings = utils.getSetting();
 const dbPath = path.join(__dirname, "db.json");
 
 const client = new Client({
@@ -21,7 +21,6 @@ const client = new Client({
 });
 
 client.commands = new Collection();
-const utils = new Utils();
 
 /* Command Handler */
 function loadCommands() {

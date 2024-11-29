@@ -7,8 +7,11 @@ const dbPath = path.join(__dirname, "../db.json");
 const settingsPath = path.join(__dirname, "../settings.json");
 let settings;
 
+const Utils = require("../utils");
+const utils = new Utils();
+
 try {
-  settings = JSON.parse(fs.readFileSync(settingsPath, "utf8"));
+  settings = utils.getSetting();
 } catch (error) {
   console.error(`Failed to read settings.json: ${error.message}`);
   settings = {};

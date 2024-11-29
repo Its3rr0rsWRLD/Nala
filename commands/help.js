@@ -1,5 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-const settings = require("../settings.json");
+const Utils = require("../utils");
+const utils = new Utils();
+const settings = utils.getSetting();
 
 module.exports = {
   data: new SlashCommandBuilder()

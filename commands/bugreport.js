@@ -5,9 +5,7 @@ const dotenv = require("dotenv");
 const Utils = require("../utils");
 const utils = new Utils();
 
-const settings = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "..", "settings.json"), "utf8")
-);
+const settings = utils.getSetting();
 
 module.exports = {
   data: new SlashCommandBuilder()

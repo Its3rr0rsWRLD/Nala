@@ -5,7 +5,9 @@ const fs = require("fs");
 const path = require("path");
 
 const warnsFilePath = path.join(__dirname, "../warns.json");
-const settings = require("../settings.json");
+const Utils = require("../utils");
+const utils = new Utils();
+const settings = utils.getSetting();
 
 module.exports = {
   data: new SlashCommandBuilder()

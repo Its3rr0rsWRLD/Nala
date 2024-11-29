@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const axios = require("axios");
 const path = require("path");
 
+dotenv.config();
+
 let settings;
 try {
   settings = JSON.parse(fs.readFileSync(path.join(__dirname, "settings.json"), "utf8"));
@@ -13,6 +15,30 @@ try {
 
 class Utils {
   constructor() {}
+
+  getSetting() {
+    const mergeSettings = (obj, prefix = "") => {
+      const result = {};
+      for (const key in obj) {
+        if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
+          result[key] = mergeSettings(obj[key], `${prefix}${key}_`);
+        } else {
+          const envKey = `${prefix}${key}`.toUpperCase();
+          const envValue = process.env[envKey];
+          if (settings.envOverride && envValue !== undefined) {
+            if (envValue === "true") result[key] = true;
+            else if (envValue === "false") result[key] = false;
+            else if (!isNaN(envValue)) result[key] = parseFloat(envValue);
+            else result[key] = envValue;
+          } else {
+            result[key] = obj[key];
+          }
+        }
+      }
+      return result;
+    };
+    return mergeSettings(settings);
+}
 
   async tempReply(interaction, options) {
     let content = options.content;

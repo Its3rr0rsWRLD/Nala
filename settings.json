@@ -1,4 +1,5 @@
 {
+  "envOverride": true,
   "defaultTempReply": 5000,
   "debug": false,
   "help": {
@@ -22,7 +23,7 @@
   "useOpenAIWhisperAPI": false,
   "bugReport": {
     "enabled": true,
-    "webhook": "PUT IN .ENV AT bugReport_WEBHOOK",
+    "webhook": "PUT IN .ENV AT BUGREPORT_WEBHOOK",
     "automatic": true
   },
   "transcribeHost": "http://127.0.0.1:5000/transcribe",
@@ -32,6 +33,10 @@
       "or a public address like https://transcribe.example.com/transcribe",
       "but it needs to be running NalaAI's transcribe server.",
       "Find it at https://github.com/Its3rr0rsWRLD/NalaAI"
+    ],
+    "envOverride": [
+      "This will override the settings.json file with the .env file.",
+      "This is useful for setting custom settings on a hosting platform."
     ]
   }
 }
