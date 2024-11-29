@@ -26,7 +26,7 @@
     "webhook": "PUT IN .ENV AT BUGREPORT_WEBHOOK",
     "automatic": true
   },
-  "transcribeHost": "http://127.0.0.1:5000/transcribe",
+  "transcribeHost": "http://nalaai.railway.internal:5000/transcribe",
   "// COMMENTS \\": {
     "transcribeHost": [
       "This can be a local address like http://127.0.0.1:5000/transcribe",

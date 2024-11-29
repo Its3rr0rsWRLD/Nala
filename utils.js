@@ -148,7 +148,7 @@ class Utils {
   }
 
   async bugReport(error, interaction) {
-    const webhookURL = settings.bugReport.webhookURL;
+    const webhookURL = settings.BUGREPORT_WEBHOOK;
     if (!webhookURL) {
       if (interaction) {
         if (interaction.replied || interaction.deferred) {
